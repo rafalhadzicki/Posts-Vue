@@ -2,8 +2,8 @@
 type CardProps = {
   cardClass?: string;
 };
-const props = defineProps<CardProps>();
-const { cardClass } = props;
+
+defineProps<CardProps>();
 </script>
 
 <template>

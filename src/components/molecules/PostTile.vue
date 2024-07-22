@@ -1,22 +1,16 @@
 <script lang="ts" setup>
-import { XMarkIcon } from "@heroicons/vue/24/solid";
 import { ref } from "vue";
 import { Post } from "../../models/post";
-import Spinner from "../atoms/Spinner.vue";
+import PostBody from "../templates/PostBody.vue";
 import Modal from "./Modal.vue";
 
 const props = defineProps<{ post: Post }>();
 const { title, body, url } = props.post;
 const imgSrc = `url(${url})`;
 const isModalOpen = ref(false);
-const isPictureLoaded = ref(false);
 
 const handleClick = () => {
   isModalOpen.value = !isModalOpen.value;
-  isPictureLoaded.value = false;
-};
-const handleImageLoad = () => {
-  isPictureLoaded.value = true;
 };
 </script>
 
@@ -26,18 +20,8 @@ const handleImageLoad = () => {
     <p>{{ `${body.slice(0, 80)}... Read more` }}</p>
   </div>
   <Modal class="modal" v-if="isModalOpen" :set-modal="handleClick">
-    <div class="modalContent">
-      <div v-if="isPictureLoaded" class="postTitleContainer">
-        <h1>
-          {{ post.title }}
-        </h1>
-        <XMarkIcon class="xIcon" @click="handleClick" />
-      </div>
-      <img @load="handleImageLoad" :src="post.url" alt="post image" />
-      <p v-if="isPictureLoaded">{{ post.body }}</p>
-      <Spinner v-if="!isPictureLoaded" />
-    </div>
-  </Modal>
+    <PostBody :post="props.post" :onClose="handleClick"
+  /></Modal>
 </template>
 
 <style lang="scss" scoped>
@@ -89,32 +73,6 @@ const handleImageLoad = () => {
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
-    }
-  }
-  .modalContent {
-    min-height: 200px;
-    p {
-      font-size: fs.$sm;
-      font-weight: 300;
-    }
-    img {
-      width: 100%;
-      max-height: 200px;
-      margin: 10px 0 20px 0;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-    .postTitleContainer {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-start;
-      .xIcon {
-        max-width: 40px;
-        &:hover {
-          cursor: pointer;
-        }
-      }
     }
   }
 }
