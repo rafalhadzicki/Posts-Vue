@@ -11,6 +11,8 @@ import { RoutePaths } from "../../constants/routes";
 <style scoped lang="scss">
 @use "../../styles/breakpoints" as bp;
 .navbar {
+  position: absolute;
+  top: 0;
   background-color: #333;
   color: white;
   display: flex;

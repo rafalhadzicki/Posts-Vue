@@ -4,7 +4,7 @@ import apiClient from "../helpers/apiClient";
 import { Post, PostPhoto, PostResponse } from "../models/post";
 
 export const useGetPosts = (_page: number) => {
-  const { data: posts, isLoading: isPostsloading } = useQuery<Post[]>({
+  const getPostsQuery = useQuery<Post[]>({
     queryKey: ["posts"],
     queryFn: async () => {
       const data = await apiClient.get<PostResponse[]>(ApiRoutes.Posts, {
@@ -21,26 +21,5 @@ export const useGetPosts = (_page: number) => {
       return posts;
     },
   });
-  return { posts, isPostsloading };
-};
-
-export const useGetPost = (id: number) => {
-  const { data: post, isLoading: isPostloading } = useQuery<Post>({
-    queryKey: ["post", id],
-    queryFn: async () => {
-      const data = await apiClient.get<PostResponse[]>(ApiRoutes.Posts, {
-        id,
-      });
-      const photo = await apiClient.get<PostPhoto[]>(ApiRoutes.Photos, {
-        id,
-      });
-
-      return {
-        ...data[0],
-        url: photo[0].url,
-        thumbnailUrl: photo[0].thumbnailUrl,
-      };
-    },
-  });
-  return { post, isPostloading };
+  return getPostsQuery;
 };

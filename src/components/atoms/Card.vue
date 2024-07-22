@@ -1,28 +1,18 @@
 <script setup lang="ts">
 type CardProps = {
-  containerClass?: string;
   cardClass?: string;
 };
 const props = defineProps<CardProps>();
-const { containerClass, cardClass } = props;
+const { cardClass } = props;
 </script>
 
 <template>
-  <div :class="['cardMainContainer', containerClass]">
-    <div :class="['card', cardClass]">
-      <slot />
-    </div>
+  <div @click.stop :class="['card', cardClass]">
+    <slot />
   </div>
 </template>
 <style lang="scss">
 @use "../../styles/breakpoints" as bp;
-.cardMainContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-  height: 100%;
-}
 .card {
   display: flex;
   flex-direction: column;
@@ -33,6 +23,7 @@ const { containerClass, cardClass } = props;
   padding: 20px;
   @media screen and (max-width: bp.$sm) {
     width: 100%;
+    height: 100%;
     box-shadow: none;
     background-color: #ffffff;
   }

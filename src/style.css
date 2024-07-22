@@ -15,13 +15,16 @@
 body {
   margin: 0;
   min-width: 320px;
+  overflow: hidden;
 }
 
 #app {
-  margin: 0 auto;
   min-height: 100vh;
   height: 1px;
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
   color: #333;
+  align-items: center;
+  justify-content: center;
 }
