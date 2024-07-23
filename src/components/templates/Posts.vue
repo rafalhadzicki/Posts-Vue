@@ -1,23 +1,30 @@
 <script setup lang="ts">
 import { UseQueryReturnType } from "@tanstack/vue-query";
+import { Ref, watch } from "vue";
 import { Post } from "../../models/post";
 import Spinner from "../atoms/Spinner.vue";
-import PostTile from "../molecules/PostTile.vue";
+import PostsNavigation from "../molecules/PostsNavigation.vue";
+import PostTile from "../organisms/PostTile.vue";
 
 type PostsTemplateProps = {
   postsQuery: UseQueryReturnType<Post[], Error>;
+  pageSetter: () => Ref<number>;
 };
 const props = defineProps<PostsTemplateProps>();
-const { data: posts, isLoading } = props.postsQuery;
+const { data: posts, isPending } = props.postsQuery;
+watch(isPending, () => {
+  console.log("pending", isPending.value);
+});
 </script>
 
 <template>
   <div class="homeMainContainer">
-    <h1>Posts</h1>
     <div v-if="posts" class="postsContainer">
+      <h1>Posts</h1>
       <PostTile v-for="post in posts" :key="post.id" :post="post" />
     </div>
-    <Spinner v-else-if="isLoading" />
+    <PostsNavigation v-if="posts" :page-setter="pageSetter" />
+    <Spinner v-if="isPending" />
     <!-- TODO: Add error component -->
   </div>
 </template>
@@ -28,26 +35,23 @@ const { data: posts, isLoading } = props.postsQuery;
 .homeMainContainer {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  overflow: hidden;
   height: 100%;
+  overflow-y: scroll;
   h1 {
     font-size: fs.$lg;
     font-weight: 500;
+    grid-column: 1/-1;
+    text-align: center;
+  }
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 .postsContainer {
   display: grid;
-  grid-template-columns: 1fr;
   grid-auto-rows: min-content;
   gap: 10px;
-  height: 100%;
   width: 100%;
-  overflow-y: scroll;
-  &::-webkit-scrollbar {
-    display: none;
-  }
   @media screen and (min-width: bp.$sm) {
     grid-template-columns: 1fr 1fr;
   }
