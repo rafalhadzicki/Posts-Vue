@@ -30,7 +30,6 @@ defineProps<ModalProps>();
 .styledCard {
   max-height: 600px;
   max-width: 600px;
-  overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
   }

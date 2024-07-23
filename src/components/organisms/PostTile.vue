@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { Post } from "../../models/post";
+import Modal from "../molecules/Modal.vue";
 import PostBody from "../templates/PostBody.vue";
-import Modal from "./Modal.vue";
 
 const props = defineProps<{ post: Post }>();
 const { title, body, url } = props.post;
@@ -20,12 +20,13 @@ const handleClick = () => {
     <p>{{ `${body.slice(0, 80)}... Read more` }}</p>
   </div>
   <Modal class="modal" v-if="isModalOpen" :set-modal="handleClick">
-    <PostBody :post="props.post" :onClose="handleClick"
-  /></Modal>
+    <PostBody :post="post" :onClose="handleClick" />
+  </Modal>
 </template>
 
 <style lang="scss" scoped>
 @use "../../styles/fontSizes.scss" as fs;
+@use "../../styles/breakpoints.scss" as bp;
 .postTile {
   background-color: #494646;
   background-image: v-bind(imgSrc);
@@ -45,6 +46,9 @@ const handleClick = () => {
     transform: scale(0.95);
     transition: transform 0.3s;
     opacity: 0.8;
+  }
+  @media screen and (max-width: bp.$sm) {
+    max-width: 100%;
   }
   h1 {
     font-size: fs.$md;
