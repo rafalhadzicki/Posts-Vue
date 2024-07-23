@@ -5,4 +5,5 @@ export enum RoutePaths {
 export enum ApiRoutes {
   Posts = "/posts",
   Photos = "/photos",
+  Comments = "/comments",
 }

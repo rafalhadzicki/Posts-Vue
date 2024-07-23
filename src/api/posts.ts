@@ -1,17 +1,18 @@
-import { useQuery } from "@tanstack/vue-query";
+import { keepPreviousData, useQuery } from "@tanstack/vue-query";
+import { Ref } from "vue";
 import { ApiRoutes } from "../constants/routes";
 import apiClient from "../helpers/apiClient";
-import { Post, PostPhoto, PostResponse } from "../models/post";
+import { Comment, Post, PostPhoto, PostResponse } from "../models/post";
 
-export const useGetPosts = (_page: number) => {
-  const getPostsQuery = useQuery<Post[]>({
-    queryKey: ["posts"],
+export const useGetPosts = (page: Ref<number>) => {
+  return useQuery<Post[]>({
+    queryKey: ["posts", page],
     queryFn: async () => {
       const data = await apiClient.get<PostResponse[]>(ApiRoutes.Posts, {
-        _page,
+        _page: page.value,
       });
       const photos = await apiClient.get<PostPhoto[]>(ApiRoutes.Photos, {
-        _page,
+        _page: page.value,
       });
       const posts = data.map((post, index) => ({
         ...post,
@@ -20,6 +21,20 @@ export const useGetPosts = (_page: number) => {
       }));
       return posts;
     },
+    enabled: true,
+    placeholderData: keepPreviousData,
   });
-  return getPostsQuery;
+};
+
+export const useGetComments = (postId: number) => {
+  const { data: comments, isLoading: isCommentLoading } = useQuery<Comment[]>({
+    queryKey: ["comments", postId],
+    queryFn: async () => {
+      const data = await apiClient.get<Comment[]>(ApiRoutes.Comments, {
+        postId,
+      });
+      return data;
+    },
+  });
+  return { comments, isCommentLoading };
 };
